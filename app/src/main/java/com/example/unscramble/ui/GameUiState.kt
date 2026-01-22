@@ -2,6 +2,7 @@ package com.example.unscramble.ui
 
 
 data class GameUiState(
+    val word: String = "",
     val scrambledWord: String = "",
     val wordCount: Int = 0,
     val score: Int = 0,

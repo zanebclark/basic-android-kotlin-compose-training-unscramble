@@ -30,6 +30,7 @@ class GameViewModel(
             usedWords.add(value)
             _uiState.update { currentState ->
                 currentState.copy(
+                    word = value,
                     scrambledWord = shuffleWord(value),
                     wordCount = currentState.wordCount + 1
                 )
@@ -38,6 +39,9 @@ class GameViewModel(
         }
 
     init {
+        require(availableWords.size >= 2) {
+            "availableWords must contain at least 2 words"
+        }
         resetGame()
     }
 
@@ -58,9 +62,12 @@ class GameViewModel(
     }
 
     fun resetGame() {
-        _uiState.update { GameUiState() }
-        usedWords.clear()
-        currentWord = getUnusedWord()
+        val prevCurrentWord = currentWord
+        while (prevCurrentWord == currentWord) {
+            _uiState.update { GameUiState() }
+            usedWords.clear()
+            currentWord = getUnusedWord()
+        }
     }
 
     var userGuess by mutableStateOf("")
@@ -103,7 +110,7 @@ class GameViewModel(
         val Factory: ViewModelProvider.Factory = viewModelFactory {
             initializer {
                 // Here you can pull dependencies.
-                // For now, we use the 'allWords' data directly.
+                // For now, we use the 'allWords' dat``a directly.
                 GameViewModel(availableWords = allWords)
             }
         }
